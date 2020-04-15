@@ -18,7 +18,8 @@ var commentRouts = require("./routs/comments.js"),
     blogRouts = require("./routs/blogs.js"),
     userRouts = require("./routs/users.js")
 
-mongoose.connect("mongodb://localhost/blog_app")
+mongoose.connect("mongodb+srv://mats2:pass20052006@cluster0-jgkia.mongodb.net/test?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true})
+// mongoose.connect("mongodb://localhost/blog_app")
 
 app.use(methodOverride("_method"))
 app.use(express.static("public"));
@@ -58,4 +59,4 @@ app.use(function(req, res, next){
 //Comment Routs
 
 
-app.listen(2000, console.log(2000))
+app.listen(process.env.PORT || 2000, console.log(2000))
