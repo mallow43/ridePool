@@ -1,0 +1,14 @@
+<%- include("partials/header")%>
+<div class="ui main text container segment">
+    <div class="ui huge header">Edit Comment</div>
+    <form action="/blogs/<%=blog_id%>/comments/<%=comment._id%>?_method=PUT" class="ui form" method="POST">
+
+        <div class="field">
+            <label>Comment Content</label>
+            <textarea name="text" id="" cols="30" required rows="10"><%=comment.text%></textarea>
+        </div>
+        <button class="ui inverted blue button">Submit!</button>
+    </form>
+</div>
+
+<%- include("partials/footer")%>

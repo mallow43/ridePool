@@ -1,0 +1,18 @@
+i.icon {
+    font-size: 2em;;
+}
+div.container.main{
+    margin-top: 3.0em;
+}
+.ui.inverted.menu .item{
+    color: #54c8ff
+}
+.ui.inverted.menu a.item:hover{
+    color: #54c8ff
+}
+.color123{
+    color: #54c8ff
+}
+.block{
+    display:block
+}
