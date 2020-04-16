@@ -39,6 +39,7 @@ router.post("/blogs/:id/comments/new", middleware.isLoggedIn,function(req, res){
                 }else{
                     blog.comments.push(comment)
                     blog.save()
+                    req.flash("success", "Comment Created!")
                     res.redirect("/blogs/"+req.params.id)
                 }
             })

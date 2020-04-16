@@ -9,14 +9,12 @@ middleware.blogOwnership = function(req, res, next){
             res.redirect("back")
         }else{
             if(!req.user){
-                flash("error", "Please Log in First")
-                console.log("============")
+                req.flash("error", "Please Log in First")
                 res.redirect("/login")
             }else{
                 if(blog.author.id.equals(req.user._id)){
                     next()
                 }else{
-                    console.log("============")
 
                     flash("error", "You are not authorized to make this change.")
                     res.redirect("/blogs/"+ blog._id)
@@ -34,13 +32,13 @@ middleware.commentOwnership = function(req, res, next){
             res.redirect("back")
         }else{
             if(!req.user){
-                flash("error", "Please Log in First")
+                req.flash("error", "Please Log in First")
                 res.redirect("/login")
             }else{
                 if(blog.author.id.equals(req.user._id)){
                     next()
                 }else{
-                    flash("error", "You are not authorized to make this change.")
+                    req.flash("error", "You are not authorized to make this change.")
                     res.redirect("/login")
                 }
             }
@@ -53,10 +51,7 @@ middleware.isLoggedIn = function (req, res, next){
     if(req.user){
         next()
     }else{
-        
-
-        flash("error", "Please Log in First")
-        
+        req.flash("error", "Please Log in First")
         res.redirect("/login")
     }
 }

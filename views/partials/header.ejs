@@ -28,8 +28,25 @@
     </div>
 
 <div class="ui container">
-    <%if(errorMessage){%>
-        <h1><%=errorMessage%></h1>
-    <%}%>
 
+    <%if(errorMessage.length > 0 ){%>
+        <br>
+        <br>
+        <br>
+        <br>
+        <div style= "margin-bottom: -70px"class="ui red message">
+            <p><%=errorMessage%></p>
+        </div>
+    <%}%>
+    <%if(successMessage.length > 0 ){%>
+        <br>
+        <br>
+        <br>
+        <br>
+        <div style= "margin-bottom: -70px" class="ui blue message">
+            <p><%=successMessage%></p>
+        </div>
+    
+    <%}%>
+    
 </div>
