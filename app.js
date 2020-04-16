@@ -59,4 +59,4 @@ app.use(function(req, res, next){
 //Comment Routs
 
 
-app.listen(1234, console.log(2000))
+app.listen(process.env.PORT, console.log(2000))
