@@ -39,6 +39,9 @@ div.ui.segment{
     border-radius: 5px;
     border: 1px solid #2185d0;
 }
+.ui.button.black.redoo{
+    color: red;
+}
 .cal-col{
     border-left: 1px solid #2185d0;
     border-bottom: 1px solid #2185d0;

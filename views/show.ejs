@@ -47,7 +47,7 @@
                         <%})%>
                         </p>
                       <%}%>
-                        <a href="/calendar/<%=event._id%>/join" class="blue inverted ui button">Join</a>
+                        <a href="/calendar/<%=event._id%>/join" class="black  ui button">Join</a>
                   </div>
                   <%if(currentUser){%>
                     <% if (currentUser._id.equals(event.drive.driver.id)){%>
@@ -59,8 +59,8 @@
                         
                           <p>Name: <%= rider.firstName%> <%= rider.lastName%></p>
                           <p>+ <%=rider.duration%> minutes, + <%= rider.distance%> km, <%=rider.pickUpLocation.substr(0, rider.pickUpLocation.indexOf(","))%></p>
-                          <a href="/calendar/<%=event._id%>/<%=rider.id%>/accept" class="button ui inverted blue">Accept</a>
-                          <a href="/calendar/<%=event._id%>/<%=rider.id%>/decline" class="button ui inverted red">Decline</a>
+                          <a href="/calendar/<%=event._id%>/<%=rider.id%>/accept" class="button ui black ">Accept</a>
+                          <a href="/calendar/<%=event._id%>/<%=rider.id%>/decline" class="button ui black redoo">Decline</a>
                       </div>
                       <%})%>
                     <%}%>

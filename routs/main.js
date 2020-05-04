@@ -35,6 +35,9 @@ router.get("/home", function(req, res){
 
     })
 })
+router.get("/", function(req, res){
+    res.redirect("/home")
+})
 router.get("/calendar/new", middleware.isLoggedIn, function(req, res){
     res.render("newDrive.ejs")
 })
