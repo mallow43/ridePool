@@ -4,15 +4,105 @@ i.icon {
 div.container.main{
     margin-top: 6.0em;
 }
-.ui.inverted.menu .item{
-    color: #54c8ff
+div.ui.fixed.menu{
+    border-bottom: 1px solid #2185d0;
 }
-.ui.inverted.menu a.item:hover{
-    color: #54c8ff
+.ui.menu .item{
+    color: #2185d0
+}
+.ui.menu a.item:hover{
+    color: #2185d0
 }
 .color123{
-    color: #54c8ff
+    color: #2185d0
 }
 .block{
     display:block
+}
+div.ui.segment{
+    border: 1px solid #2185d0;
+}
+.date{
+    text-align: center;
+    margin: auto;
+}
+.driver{
+    color: black;
+}
+.driver:hover{
+    color: #2185d0
+}
+.none{
+    display: none;
+}
+#map{
+    border-radius: 5px;
+    border: 1px solid #2185d0;
+}
+.cal-col{
+    border-left: 1px solid #2185d0;
+    border-bottom: 1px solid #2185d0;
+    border-top: 1px solid #2185d0;
+    padding: 10px 0px;
+    height: 45vw;
+    flex-wrap: wrap;
+    display: flex;
+    position: relative;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.outer {
+    white-space: wrap;
+    position: relative;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    position: absolute;
+}
+#map{
+    width:100%;
+    height: 400px;
+}
+.calendar-event{
+    border: 1px solid grey;
+    padding: 5px;
+    margin-left: -10px;
+    margin-right: -10px;
+    border-radius: .28571429rem;
+    margin-top: 10px;
+    background-color: #dff0ff;
+    color: #2185d0;
+    box-shadow: 0 0 0 1px #2185d0 inset;
+    overflow-wrap: break-word;
+}
+body{
+    background: black;
+}
+.ui.button.black{
+    color: #2185d0;
+    margin-top: 10px;
+}
+.cal-col.first{
+    border-radius: 5px 0  0 5px;
+}
+.cal-col.last{
+    border-radius: 0px 5px   5px 0;
+    border-right: 1px solid #2185d0;
+}
+.calendar{
+    width: 100%;
+}
+div.eleven.wide.column{
+    width: 100%;
+}
+div.five.column.row{
+    padding: 0;
+}
+.desktop{
+    display: none;
+}
+@media (min-width: 750px){
+    .desktop{
+        display: block;
+    }
+
 }

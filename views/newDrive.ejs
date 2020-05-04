@@ -1,0 +1,176 @@
+<%- include("partials/header")%>
+<script></script>
+<div class="ui main text container segment">
+    <div class="ui huge header">Add a Drive</div>
+
+    <form action="/calendar/new" class="ui form" method="POST">
+        <div class="fields">
+            <div class="field">
+                <label>Start Time</label>
+                <input type="time" name="startTime"required>
+            </div>
+            <div class="field">
+                <label>Max Riders</label>
+                <input type="number" name="maxRiders"required>
+            </div>            
+            <div class="field">
+                <label>Date</label>
+                <input type="date" name="date"required>
+            </div>
+        </div>
+        <div class="fields">
+            <div class="field">
+                <label>Start Location(Campus)</label>
+
+                <select name="startLoc" class="ui dropdown" id="select">
+                    <option value="">Campus</option>
+                    <option value="<%=currentUser.address%>">Your Home</option>
+                    <option value="4600 Bissonnet St, Bellaire, TX 77401">Bissonet Campus</option>
+                    <option value="1010 Autrey St, Houston, TX 77006, USA">Museum District Campus</option>
+                    <option value="Outside of School Event">Outside of School Event</option>
+                  </select>
+            </div>
+            <div class="field">
+                <label>Destination(Campus)</label>
+
+                <select name="campus" class="ui dropdown" id="selec">
+                    <option value="">Campus</option>
+                    <option value="<%=currentUser.address%>">Your Home</option>
+                    <option value="4600 Bissonnet St, Bellaire, TX 77401">Bissonet Campus</option>
+                    <option value="1010 Autrey St, Houston, TX 77006, USA">Museum District Campus</option>
+                    <option value="Outside of School Event">Outside of School Event</option>
+                  </select>
+            </div>
+        </div>
+
+        <div class="fields">
+            <div class="field disabled" id="destination">
+                <label>Start Location</label>
+                <input type="text" id="in" name="startLocation" >
+            </div>
+            <div class="field disabled" id="destinations">
+                <label>Destination</label>
+                <input type="text" id="inp" name="destination" >
+            </div>
+        </div>
+        <button class="ui black button inline">Submit!</button>
+
+    </form>
+    <script>
+        $('#select').dropdown()
+        $('#selec').dropdown()
+        
+    </script>
+</div>
+
+</head>
+<body>
+  <script>
+    var dropdown = document.querySelector("#select")
+
+    // dropdown.addEventListener("change", function(){
+    //     origin = currentUser.address
+    //     if(dropdown.value != "Outside of School Event"){
+    //       destination = dropdown.value
+    //     }
+    // })
+    // function initMap() {
+    //     var directionsService = new google.maps.DirectionsService;
+    //     var directionsDisplay = new google.maps.DirectionsRenderer;
+
+
+    //       calculateAndDisplayRoute(directionsService, directionsDisplay);
+
+    //   }
+    //   var dropdown = document.querySelector("#select")
+
+    //   var origin
+    //   var destination
+    //   dropdown.addEventListener("change", function(){
+    //       origin = currentUser.address
+    //       if(dropdown.value != "Outside of School Event"){
+    //         destination = dropdown.value
+
+    //       }else{
+    //           destination = document.querySelector("#in").value
+    //       }
+    //   })
+
+    //   function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+    //     directionsService.route({
+    //       origin: origin,
+    //       destination: destination,
+    //       travelMode: 'DRIVING',
+          
+    //     }, function(response, status) {
+    //       if (status === 'OK') {
+    //         directionsDisplay.setDirections(response);
+    //         var directionsData = response.routes[0].legs[0]; // Get data about the mapped route
+    //         if (!directionsData) {
+    //           window.alert('Directions request failed');
+    //           return;
+    //         }
+    //         else {
+ 
+    //           console.log( directionsData.distance.text + directionsData.duration.text)
+    //     }
+    //       } else {
+    //         window.alert('Directions request failed due to ' + status);
+    //       }
+    //     });
+    function initMap(){
+      var input = document.getElementById('in');
+      var searchBox = new google.maps.places.SearchBox(input);
+
+      searchBox.addListener('places_changed', function() {
+        var places = searchBox.getPlaces();
+
+        if (places.length == 0) {
+          return;
+        }
+
+      });
+      var input1 = document.getElementById('inp');
+      var searchBox1 = new google.maps.places.SearchBox(input1);
+
+      searchBox1.addListener('places_changed', function() {
+        var places = searchBox1.getPlaces();
+
+        if (places.length == 0) {
+          return;
+        }
+
+      });
+    }
+
+    function check(){
+        if(dropdown.value == "Outside of School Event"){
+            console.log("dropdown.value")
+            document.querySelector("#destination").classList.remove("disabled")
+        }
+    }
+
+    dropdown.addEventListener("change", function(){
+        if(dropdown.value == "Outside of School Event"){
+            document.querySelector("#destination").classList.remove("disabled")
+            document.getElementById("in").required = true;
+        }else{
+            document.querySelector("#destination").classList.add("disabled")
+            document.getElementById("in").required = false;
+        }  
+    })
+    var dropdown1 = document.querySelector("#selec")
+    dropdown1.addEventListener("change", function(){
+        if(dropdown1.value == "Outside of School Event"){
+            document.querySelector("#destinations").classList.remove("disabled")
+            document.getElementById("inp").required = true;
+        }else{
+            document.querySelector("#destination").classList.add("disabled")
+            document.getElementById("inp").required = false;
+        }  
+    })
+  </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAz2hqfmP9Xns6N6Khgl2j3tD83fQnep1c&libraries=places&callback=initMap"></script>
+
+
+<%- include("partials/footer")%>

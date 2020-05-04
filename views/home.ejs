@@ -1,21 +1,179 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>BlogSite</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
-        <link rel="stylesheet" href="/stylesheets/pap.css">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js" type="text/javascript" async></script>
-    </head>
-    <body>
-    
+<%- include("partials/header.ejs")%>
+<script src=""></script>
+<div class="ui main container">
+    <div class="ui segment">
+        <div class="ui divided items">
+            <div class="item">
+                <h1>Home Page</h1>
+            </div>    
+            <div class="">
+                <div class="ui stackable raised grid">
+                    <div class="five wide column">
+                        <p>Select a Calendar Event</p>
+                        <a href="/calendar/new" class="ui button black">Add a Drive Event</a>
+                    </div>
+                    <div class="eleven wide column">
+                        <div class ="">
+                            <h5 class="month-title"></h5>
+                            <div class="ui icon buttons">
+                                <button id="back" onclick = "back()" style = "margin-bottom:10px;padding-bottom: 2px"class="ui black xs button">
+                                    <i class="chevron left icon"></i>
+                                </button>
+                                <button style = "margin-bottom:10px;padding-bottom: 2px" onclick = "forward()" class = "ui black xs button" id="forward">
+                                    <i class="chevron right icon"></i>
+                                </button>
+                            </div>
 
-    <div id="landing-header">
- 		<h1>Welcome to Blog Site!</h1>
-		<a href="/blogs" class="ui button inverted blue">View All Blogs</a>
+                            <div class="calendar ui grid  raised equal width center unstackable aligned padded ">
+                                <div class="five column row ">
+                                    <div class="cal-col first column" id = "6" >
+                                        <p>Mon <span class="date"></span></p>
+                                        <div class="" id="0">                                                                      
+                                        </div>
+                                    </div>
+                                    <div class="cal-col outer column" id = "7">
+                                        <p>Tue <span class="date"></span></p>
+                                        <div id= "1">
+                                        </div>
+                                    </div>
+                                    <div class="cal-col column" id = "8">
+                                        <p>Wed <span class="date"></span></p>
+                                        <div id="2">
+                                        </div>
+                                    </div>
+                                    <div class="cal-col column" id = "9">
+                                        <p>Thu <span class="date"></span></p>
+                                        <div id="3">
+                                        </div>
+                                    </div>
+                                    <div class="cal-col last column" id = "10">
+                                        <p>Fri <span class="date"></span></p>
+
+                                        <div id="4">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>        
+        </div>
     </div>
-    
-    <ul class="slideshow">
-      <li></li>
- 
-    </ul>
-    <%- include("partials/footer")%>
+</div>
+
+<script>
+    function daysInMonth (month, year) {
+        return new Date(year, month, 0).getDate()
+    }
+    function getMonday(d) {
+      d = new Date(d)
+      var day = d.getDay(),
+          diff = d.getDate() - day + (day == 0 ? -6:1)
+      return new Date(d.setDate(diff))
+    }
+    var day1 = new Date().getDate(),
+            month1 = new Date().getUTCMonth(),
+            year1 = new Date().getUTCFullYear()
+    function main(){
+        var events = <%-JSON.stringify(calendar)%>;
+
+        var day = getMonday(new Date(year1, month1, day1))
+        var firstDay = day.getDate()
+        var mon = day.getMonth() +1
+        var mont = day.getMonth()
+        var year = day.getUTCFullYear()
+        
+        
+        var month = new Array()
+            month[0] = "January"
+            month[1] = "February"
+            month[2] = "March"
+            month[3] = "April"
+            month[4] = "May"
+            month[5] = "June"
+            month[6] = "July"
+            month[7] = "August"
+            month[8] = "September"
+            month[9] = "October"
+            month[10] = "November"
+            month[11] = "December"
+
+        var dayss = daysInMonth(mon, year)
+        document.querySelector(".month-title").innerHTML = month[mont] +" "+ day.getUTCFullYear()
+
+        var days = document.querySelectorAll(".date")
+        function format(date) {
+            var d = new Date(date),
+                month = '' + (d.getMonth() + 1),
+                day = '' + d.getDate(),
+                year = d.getFullYear();
+
+            if (month.length < 2) 
+                month = '0' + month;
+            if (day.length < 2) 
+                day = '0' + day;
+
+            return [year, month, day].join('-');
+        }
+        var count = 0
+        var count1 = 6
+        days.forEach(function(gay){
+            gay.innerHTML = firstDay
+            
+            events.forEach(function(event){
+                if(event.date == format(new Date(year, mont, firstDay))){
+                    function addElement () { 
+                      var newDiv = document.createElement("div"); 
+                      console.log(event._id)
+                      newDiv.innerHTML = "<a href = ''><p>"+event.startTime+"</p> Destination: "+event.drive.campus+"</a>"
+                      newDiv.querySelector("a").setAttribute("href", "/calendar/"+event._id)
+                      var currentDiv = document.getElementById(count); 
+                      var parent = document.getElementById(count1)
+                      newDiv.classList.add("calendar-event")
+                      newDiv.classList.add("message")
+                      parent.insertBefore(newDiv, currentDiv); 
+                    }
+                    addElement()
+                }
+            })
+            count+=1
+            count1 += 1
+            firstDay = firstDay+1
+            if (firstDay> dayss){
+                firstDay = 1
+                mont = mont +1
+                mon = mon +1
+                if(mon>12){
+                    year = year+1
+                }
+            }
+        })
+        }
+    main()
+    function forward(){
+        day1 = day1+7
+        events = document.querySelectorAll(".calendar-event")
+        events.forEach(function(event){
+            event.outerHTML = ""
+        })
+        main()
+    }
+    function back(){
+        day1 = day1-7
+        events = document.querySelectorAll(".calendar-event")
+        events.forEach(function(event){
+            event.outerHTML = ""
+        })
+        main()
+    }
+    const object = {
+        date:{
+            date: new Date(year1, month1, day1),
+            day: day1
+        }
+        
+    }
+
+</script>
+<%- include("partials/footer.ejs")%>

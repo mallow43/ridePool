@@ -1,0 +1,14 @@
+<%- include("partials/header.ejs")%>
+<div class="ui main container">
+    <div class="ui segment">
+        <h1><%=user.firstName%> <%=user.lastName%>'s Profile</h1>
+        <a href="mailito:<%=user.email%>"></a>
+        <p>
+            Email: <a href="mailto:<%=user.email%>"><%=user.email%></a>
+        </p>    
+        <p>
+            
+        </p>    
+    </div>
+</div>
+<%- include("partials/footer.ejs")%>

@@ -1,78 +1,146 @@
 <%- include("partials/header")%>
-<div style="margin-top: 50px;"class="ui container main text segment">
-    <div class="ui huge header">
+<div class="ui grid stackable container main">
+    <div class="ui row">
 
-        <%=blog.title %>
-    </div>
-    <div class="ui top attached">
-        <div style="color: #54c8ff"class="color123 ui header ">
-            <h4>Submitted by <%= blog.author.username%></h4>
-        </div>
-        <div class="item">
-            <img class="ui centered rounded image" src="<%=blog.image%>">
-        </div>
-        <div class="content color123">
-            <p><%=blog.created.toDateString()%></p>
-        </div>
-        <div class="description">
-            <p><%-blog.body%></p>
-        </div>
-        <%if(!currentUser){%>
-
-        <%}else{%>
-            <%if(currentUser._id.equals(blog.author.id)){%>
-                <div class="item">
-                    <a href="/blogs" class="button inverted primary ui">Go Back</a>
-                    <a href="/blogs/<%=blog._id%>/edit" class="ui inverted yellow button">Edit</a>
-                    <form action="/blogs/<%=blog._id%>?_method=DELETE" style="display: inline;"class=""method="POST">
-                        <button class="ui inverted red button">Delete</button>
-                    </form>
-                </div>
-            <%}%>
-        <%}%>
-
-
-    </div>
-</div>
-<div class="ui container text segment">
-    <h3>
-        Comments
-    <a href="/blogs/<%=blog._id%>/comments/new"class="ui button inverted primary  float right" style="float:right; margin-top: -5px">Add a new Comment</a>
-
-    </h3>
-    <hr>
-    <%blog.comments.forEach(function(comment){%>
-        <div class="ui comments">
-            <div class="comment">
-              
-              <div class="content">
-                <a class="author"><%=comment.author.username%></a>
-                <div class="metadata">
-                  <span class="date"><%=comment.created.toDateString()%></span>
-                </div>
-                <div class="text">
-                  <%=comment.text%>
-                </div>
-                <div class="actions">
-                    <%if(!currentUser){%>
-                        
-                    <%}else{%>
-                        <%if(currentUser.username == comment.author.username){%>
-                            <a href="/blogs/<%=blog._id%>/comments/<%=comment._id%>/edit" class="edit">Edit</a>
-                            <a href="/blogs/<%=blog._id%>/comments/<%=comment._id%>/delete" class="delete">Delete</a>
-                        <%}%>
-                    <%}%>
-                </div>
-
-              </div>
+        <div class="ten wide column">
+            <div class="ui main text  segment">
+                <div class="ui huge header">Carpool to <%= event.drive.campus%> <%=event.startTime%></div>
+                
             </div>
-            
-          </div>
-        <div>
+            <div class="ui segment">
+                <h5 class="ui top attached header">
+                    Driver: 
+                  </h5>
+                  <a class = "driver"href="/user/<%=event.drive.driver.id%>">
+                  <div class="ui attached segment">
+                    <%=event.drive.driver.firstName%> <%=event.drive.driver.lastName%>
+                  </div>
+                </a>
+                  <h5 class="ui attached header">
+                    Destination:
+                  </h5>
+                  <div class="ui attached segment">
+                    <% if(event.drive.campus == "Bissonet Campus" || event.drive.campus == "Museum District Campus"){%>
+                        <%= event.drive.campus%> 
+
+                    <%}else{%>
+                        Outside Of School Event: <%= event.drive.destination.location%>
+
+                    <%}%>
+                  </div>
+                  <h5 class="ui attached header">
+                    Drive Time: 
+                  </h5>
+                  <div class="ui attached segment">
+                    About: <span id = "duration"></span> minutes, <span id = "distance"></span>  kilometers
+                  </div>
+                  <h5 class="ui top attached header">
+                    Riders:
+                  </h5>
+                  <div class="ui attached segment">
+                      <%if(event.riders.length == 0){%>
+                          <p>No Riders So Far</p>
+                      <%}else{%>
+                        <p>
+                        <% event.riders.forEach(function(rider){%>
+                            <%=rider.firstName%> <%=rider.lastName%>,
+                        <%})%>
+                        </p>
+                      <%}%>
+                        <a href="/calendar/<%=event._id%>/join" class="blue inverted ui button">Join</a>
+                  </div>
+                  <%if(currentUser){%>
+                    <% if (currentUser._id.equals(event.drive.driver.id)){%>
+                      <h5 class="ui attached header">
+                        Pending Riders: 
+                      </h5>
+                      <% event.pendingRiders.forEach(function(rider){%>
+                      <div class="ui attached segment">
+                        
+                          <p>Name: <%= rider.firstName%> <%= rider.lastName%></p>
+                          <p>+ <%=rider.duration%> minutes, + <%= rider.distance%> km, <%=rider.pickUpLocation.substr(0, rider.pickUpLocation.indexOf(","))%></p>
+                          <a href="/calendar/<%=event._id%>/<%=rider.id%>/accept" class="button ui inverted blue">Accept</a>
+                          <a href="/calendar/<%=event._id%>/<%=rider.id%>/decline" class="button ui inverted red">Decline</a>
+                      </div>
+                      <%})%>
+                    <%}%>
+
+                  <%}%>
+
+            </div>
         </div>
-    <%})%>  
+        <div class="six wide column">
+            <div id="map"></div>
+        </div>
+    </div>
 </div>
+<script>
+  console.log(<%= event.drive.driveDistance%>)
+      function initMap() {
+        var directionsService = new google.maps.DirectionsService;
+        var directionsDisplay = new google.maps.DirectionsRenderer;
+        var map = new google.maps.Map(document.getElementById('map'), {
+        });
+        directionsDisplay.setMap(map);
+
+        calculateAndDisplayRoute(directionsService, directionsDisplay);
+
+      }
+      var waypoints = []
+      var rider = <%-JSON.stringify(event.riders)%>
+      rider.forEach(function(rider){
+        waypoints.push({
+          location: rider.pickUpLocation,
+          stopover: true
+        })
+      })
+      var even = <%-JSON.stringify(event)%>
+      var year = even.date.substr(0, 4),
+          month = even.date.substring(5, 7),
+          day = even.date.substr(8),
+          hour =even.startTime.substr(0,2),
+          minute = even.startTime.substr(3)
+      function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+        directionsService.route({
+          origin: "<%=event.drive.departure.location%>",
+          destination: "<%=event.drive.destination.location%>",
+          travelMode: 'DRIVING',
+          optimizeWaypoints: true,
+            drivingOptions: {
+              departureTime: new Date(year, month, day, hour, minute),
+            },
+            waypoints: waypoints
+        }, function(response, status) {
+          if (status === 'OK') {
+            
+            directionsDisplay.setDirections(response);
+            var directionsData = response.routes[0].legs[0]; // Get data about the mapped route
+            if (!directionsData) {
+              window.alert('Directions request failed');
+              return;
+            }
+            else {
+              var ecc = "<%=event.driveTime%>";
+              console.log(ecc)
+              if(ecc){
+
+                console.log( directionsData.distance.text + directionsData.duration.text)
+              }else{
+                console.log( directionsData.distance.text + directionsData.duration.text)
+
+              }
+
+        }
+          } else {
+            window.alert('Directions request failed due to ' + status);
+          }
+        });
+      }
+      var duration = <%=event.drive.driveDistance.duration / 60%>
+      document.getElementById("duration").innerHTML = Math.round(duration)
+      var distance = <%=event.drive.driveDistance.distance * 0.9144 *0.001%>
+      document.getElementById("distance").innerHTML = Math.round(distance)
+    </script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAz2hqfmP9Xns6N6Khgl2j3tD83fQnep1c&callback=initMap"></script>
 
 <%- include("partials/footer")%>
-
-

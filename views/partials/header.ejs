@@ -1,26 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
     <link rel="stylesheet" type="text/css" href="/stylesheets/app.css">
-
+    <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BlogSite</title>
+    <title>ridePool</title>
 </head>
 <body>
-    <div class="ui fixed inverted menu">
+    <div class="ui fixed  borderless menu">
         <div class="ui container">
 
-            <a href="/blogs" ><div class="header item"><i class="code icon"></i>BlogSite</div></a>
+            <a href="/home" ><div class="header blue item"><i class="code icon"></i>ridePool</div></a>
 
             <%if(!currentUser){%>
-                <a href="/register" class="item right">Sign Up</a>
+                <a href="/register" class="item blue right">Sign Up</a>
                 <a href="/login" class="item ">Log In</a>
             <%}else{%>
-                <a href="/new" class="item">New Blog</a>
-                <a href="/logout" class="item right">Logout</a>
-                <a href="#" class="item ">Signed in as <%=currentUser.username%></a>
+                <a href="/calendar/new" class=" blue item">New Drive</a>
+                <a href="/logout" class="item blue right">Logout</a>
+                <a href="/user/<%=currentUser._id%>" class="blue item ">Signed in as <%=currentUser.username%></a>
             <%}%>
 
             

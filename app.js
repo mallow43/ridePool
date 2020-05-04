@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 var express = require("express");
 var app = express();
 var bodyParser = require("body-parser")
@@ -9,17 +11,14 @@ var expressSanitizer = require("express-sanitizer")
     LocalStrategy = require("passport-local"),
     passportLocalMongoose = require("passport-local-mongoose"),
     passport = require("passport"),
-    flash = require("connect-flash")
-    Comment = require("./models/comments.js"),
-    Blogs = require("./models/blogs.js"),
-    User = require("./models/users.js")
+    flash = require("connect-flash"),
+    User = require("./models/users.js"),
+    userRouts = require("./routs/users.js"),
+    mainRouts = require("./routs/main.js"),
+    Calendar = require("./models/calendar.js")
+    Drive = require("./models/drive.js")
 
-var commentRouts = require("./routs/comments.js"),
-    blogRouts = require("./routs/blogs.js"),
-    userRouts = require("./routs/users.js")
-
-mongoose.connect("mongodb+srv://mats2:pass20052006@cluster0-jgkia.mongodb.net/test?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true})
-// mongoose.connect("mongodb://localhost/blog_app")
+mongoose.connect(process.env.DATABASEURL, { useNewUrlParser: true, useUnifiedTopology: true})
 
 app.use(methodOverride("_method"))
 app.use(express.static("public"));
@@ -51,12 +50,11 @@ app.use(function(req, res, next){
     next();
  });
 
- app.use(blogRouts)
- app.use(commentRouts)
- app.use(userRouts)
 
+ app.use(userRouts)
+ app.use(mainRouts)
 
 //Comment Routs
 
 
-app.listen(process.env.PORT, console.log(2000))
+app.listen(process.env.PORT || 3000, console.log(2000))
