@@ -27,7 +27,7 @@ distance.units('imperial');
       formatter: null
     };
     var geocoder = NodeGeocoder(options);
-router.get("/home", function(req, res){
+router.get("/home", middleware.isLoggedIn, function(req, res){
     Calendar.find({}).populate("drive").exec(function(err, calendar){
         console.log(calendar)
         res.render("home.ejs", {calendar:calendar})
@@ -35,7 +35,7 @@ router.get("/home", function(req, res){
 
     })
 })
-router.get("/", function(req, res){
+router.get("/", middleware.isLoggedIn, function(req, res){
     res.redirect("/home")
 })
 router.get("/calendar/new", middleware.isLoggedIn, function(req, res){
@@ -157,7 +157,7 @@ router.post("/calendar/new", middleware.isLoggedIn,function (req, res){
             })
         })
     
-    router.get("/calendar/:id", function(req, res){
+    router.get("/calendar/:id", middleware.isLoggedIn, function(req, res){
         Calendar.findById(req.params.id).populate("drive").populate("riders").populate("pendingRiders").exec(function(err, event){
             if(err){
                 console.log(err)
@@ -225,7 +225,7 @@ router.post("/calendar/new", middleware.isLoggedIn,function (req, res){
     })
 
 })
-router.get("/calendar/:id/:rider_id/decline", function(req, res){
+router.get("/calendar/:id/:rider_id/decline", middleware.isLoggedIn, function(req, res){
     Calendar.findById(req.params.id, function(err, event){
         Pending.findByIdAndRemove(req.params.rider_id, function(err, rider){
             if(err){
@@ -238,7 +238,7 @@ router.get("/calendar/:id/:rider_id/decline", function(req, res){
         })
     })
 })
-router.get("/calendar/:id/:rider_id/accept", function(req, res){
+router.get("/calendar/:id/:rider_id/accept", middleware.isLoggedIn, function(req, res){
     Calendar.findById(req.params.id).populate("drive").exec(function(err, event){
         if(err){
             console.log(err)
