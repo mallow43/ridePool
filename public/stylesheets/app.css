@@ -42,6 +42,17 @@ div.ui.segment{
 .ui.button.black.redoo{
     color: red;
 }
+.ui.button.black.redoo:hover{
+    color: white;
+}
+
+  .ui.grid{
+    padding: 0 !important;
+  }
+  .pushable.segment{
+    margin: 0 !important;
+  }
+
 .cal-col{
     border-left: 1px solid #2185d0;
     border-bottom: 1px solid #2185d0;
@@ -77,8 +88,13 @@ div.ui.segment{
     box-shadow: 0 0 0 1px #2185d0 inset;
     overflow-wrap: break-word;
 }
-body{
+div.pusher{
+    background-color: black;
+}
+div.pushable.segment{
     background: black;
+    border: none;
+    border-radius: 0;
 }
 .ui.button.black{
     color: #2185d0;
@@ -93,6 +109,9 @@ body{
 }
 .calendar{
     width: 100%;
+}
+div.ui.menu{
+    border-radius: 0%;
 }
 div.eleven.wide.column{
     width: 100%;

@@ -18,7 +18,8 @@ var expressSanitizer = require("express-sanitizer")
     Calendar = require("./models/calendar.js")
     Drive = require("./models/drive.js")
 
-mongoose.connect(process.env.DATABASEURL, { useNewUrlParser: true, useUnifiedTopology: true})
+// mongoose.connect(process.env.DATABASEURL, { useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect("mongodb://localhost/carpool_app", { useNewUrlParser: true, useUnifiedTopology: true})
 
 app.use(methodOverride("_method"))
 app.use(express.static("public"));

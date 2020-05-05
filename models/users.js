@@ -9,7 +9,7 @@ var userSchema = new mongoose.Schema({
     phoneNumber: String,
     address: String,
     lat: Number,
-    lng: Number
+    lng: Number,
 })
 userSchema.plugin(passportLocalMongoose)
 var User = mongoose.model("User", userSchema)

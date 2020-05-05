@@ -10,7 +10,7 @@
     <title>ridePool</title>
 </head>
 <body>
-    <div class="ui fixed  borderless menu">
+    <!-- <div class="ui fixed  borderless borderless menu">
         <div class="ui container">
 
             <a href="/home" ><div class="header blue item"><i class="code icon"></i>ridePool</div></a>
@@ -26,8 +26,52 @@
 
             
         </div>
-    </div>
+    </div> -->
+    <div class="ui grid">
+	
+        <div class="computer tablet only row">
+            <div class="column">
+                <div class="ui borderless menu">
+                    <a href="/home" ><div class="header blue item"><i class="code icon"></i>ridePool</div></a>
+                    <%if(!currentUser){%>
+                        <a href="/register" class="item blue right">Sign Up</a>
+                        <a href="/login" class="item ">Log In</a>
+                    <%}else{%>
+                        <a href="/calendar/new" class=" blue item">New Drive</a>
+                        <a href="/logout" class="item blue right">Logout</a>
+                        <a href="/user/<%=currentUser._id%>" class="blue item ">Signed in as <%=currentUser.username%></a>
+                    <%}%>
+                </div>
+            </div>
+        </div>
+        
+         <div class="mobile only row">
+            <div class="column">
+                <div class="ui borderless menu">
+                    <a id="mobile_item" class="item"><i class="bars icon"></i></a>
 
+                    <a href="/home" ><div class="header blue item"><i class="code icon"></i>ridePool</div></a>
+                    
+                </div>
+            </div>
+        </div>
+    
+    </div>
+    
+    <div class="ui pushable segment">
+            <div class="ui sidebar vertical borderless menu">
+
+            <%if(!currentUser){%>
+                <a href="/register" class="item blue right">Sign Up</a>
+                <a href="/login" class="item ">Log In</a>
+            <%}else{%>
+                <a href="/calendar/new" class=" blue item">New Drive</a>
+                <a href="/logout" class="item blue right">Logout</a>
+                <a href="/user/<%=currentUser._id%>" class="blue item ">Signed in as <%=currentUser.username%></a>
+            <%}%>
+            </div>
+
+<div class="pusher">
 <div class="ui container">
 
     <%if(errorMessage.length > 0 ){%>
@@ -51,3 +95,9 @@
     <%}%>
     
 </div>
+<script>
+$('.ui.sidebar').sidebar({
+    context: $('.ui.pushable.segment'),
+    transition: 'overlay'
+}).sidebar('attach events', '#mobile_item');
+</script>

@@ -34,7 +34,7 @@ router.post("/register", function(req, res){
         var lat = data[0].latitude;
         var lng = data[0].longitude;
         var location = data[0].formattedAddress;
-        User.register(new User({username: req.body.username, lat: lat, lng: lng, email: req.body.email, address: location, firstName: req.body.firstName, lastName: req.body.lastName}), req.body.password, function(err, user){
+        User.register(new User({username: req.body.username, lat: lat, lng: lng, phoneNumber: req.body.tel, email: req.body.email, address: location, firstName: req.body.firstName, lastName: req.body.lastName}), req.body.password, function(err, user){
             if(err){
                 req.flash("error", err.message)
                 res.render("register.ejs")
