@@ -21,7 +21,7 @@ var calendar = new mongoose.Schema({
         }
     ],
     date: String,
-    officialStartTime: {type: Date}
+    officialTime: {type: Date, default: Date.now}
     
 })
 module.exports = mongoose.model("Calendar", calendar)

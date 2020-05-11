@@ -13,6 +13,7 @@ var newDate = require('new-date');
 var request = require("request"),
     Pending = require("../models/pendingRiders.js")
     Rider = require("../models/riders.js")
+var nodemailer = require('nodemailer');
 
 
 distance.key(process.env.GEOCODER_API_KEY)
@@ -47,6 +48,7 @@ router.post("/calendar/new", middleware.isLoggedIn,function (req, res){
         req.body.startLoc = req.body.startLocation
     }
     geocoder.geocode(req.body.startLoc, function (err, data) {
+        console.log(err)
         if(req.body.campus == "Outside of School Event"){
             
             req.body.campus = req.body.destination
@@ -64,7 +66,7 @@ router.post("/calendar/new", middleware.isLoggedIn,function (req, res){
                 console.log(err)
             }else{
                 var year = req.body.date.substr(0, 4),
-                    month = req.body.date.substring(5, 7),
+                    month = Number(req.body.date.substring(5, 7)) - 1,
                     day = req.body.date.substr(8),
                     hour =req.body.startTime.substr(0,2),
                     minute = req.body.startTime.substr(3)
@@ -84,7 +86,9 @@ router.post("/calendar/new", middleware.isLoggedIn,function (req, res){
                     console.log(error)    
                     if(!error && response.statusCode == 200){
                         
-                        var data = JSON.parse(body) 
+                        var data = JSON.parse(body)
+                        console.log(data)
+                        console.log(body)
                         var totalDistance = 0;
                         var totalDuration = 0;
                         var legs = data.routes[0].legs;
@@ -161,9 +165,14 @@ router.post("/calendar/new", middleware.isLoggedIn,function (req, res){
         Calendar.findById(req.params.id).populate("drive").populate("riders").populate("pendingRiders").exec(function(err, event){
             if(err){
                 console.log(err)
+                res.redirect("/home")
             }else{
-                console.log(event.pendingRiders)
-                res.render("show.ejs", {event: event})
+                if(event){
+                    res.render("show.ejs", {event: event})
+                }else{
+                    req.flash("error", "Event No Longer Exists")
+                    res.redirect("/home")
+                }
 
             }
         })
@@ -193,6 +202,7 @@ router.post("/calendar/new", middleware.isLoggedIn,function (req, res){
             pickUpLocation: pick,
             distance: req.body.newDistance,
             duration: req.body.newDuration,
+            userId: req.user._id
 
         })
         console.log("===========")
@@ -226,15 +236,25 @@ router.post("/calendar/new", middleware.isLoggedIn,function (req, res){
 
 })
 router.get("/calendar/:id/:rider_id/decline", middleware.isLoggedIn, function(req, res){
-    Calendar.findById(req.params.id, function(err, event){
+    Calendar.findById(req.params.id).populate("drive").exec(function(err, event){
         Pending.findByIdAndRemove(req.params.rider_id, function(err, rider){
-            if(err){
-                console.log(err)
-                req.flash("error", "Error declining this user try again later.")
-            }else{
-                req.flash("success", "Rejected!")
-                res.redirect("back")
-            }
+            User.findById(rider.userId, function(err, user){
+                if(err){
+                    console.log(err)
+                    req.flash("error", "Error declining this user try again later.")
+                }else{
+                    user.notifications.push({
+                        title:"Request Declined",
+                        text: "Sorry your request to join " + event.drive.driver.firstName + " "+ event.drive.driver.lastName + "'s ride was declined."
+                    })
+                    user.save()
+                    console.log(user)
+                    console.log(rider)
+                    req.flash("success", "Rejected!")
+                    res.redirect("back")
+                }
+            })
+
         })
     })
 })
@@ -252,7 +272,7 @@ router.get("/calendar/:id/:rider_id/accept", middleware.isLoggedIn, function(req
 
                     if(err){
                         console.log(err)
-                        req.flash("error", "Error declining this user try again later.")
+                        req.flash("error", "Error accepting this user try again later.")
                         res.redirect("back")
                     }else{
                         console.log("=====")
@@ -262,7 +282,8 @@ router.get("/calendar/:id/:rider_id/accept", middleware.isLoggedIn, function(req
                             lastName: rider.lastName,
                             pickUpLocation: rider.pickUpLocation,
                             distance: rider.distance,
-                            duration: rider.duration
+                            duration: rider.duration,
+                            userId: rider.userId
                         }
                         Rider.create(rid, function(err, rider2){
                             if(err){
@@ -270,6 +291,13 @@ router.get("/calendar/:id/:rider_id/accept", middleware.isLoggedIn, function(req
                                 req.flash("error", "Error accepting this user try again later.")
                                 res.redirect("back")
                             }else{
+                                req.user.notifications.push({
+                                    title:"Request Accepted",
+                                    text: "Get ready for your carpool with " + drive.driver.firstName + " "+ drive.driver.lastName,
+                                    drive: drive._id,
+                                    event: event._id
+                                })
+                                req.user.save()
                                 console.log(drive)
                                 drive.driveDistance.duration = Number(drive.driveDistance.duration) + Number(rider.duration)
                                 drive.driveDistance.distance = Number(drive.driveDistance.distance) + Number(rider.distance)
@@ -289,4 +317,40 @@ router.get("/calendar/:id/:rider_id/accept", middleware.isLoggedIn, function(req
 
     })
 })
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'carpooler48482@gmail.com',
+      pass: process.env.EMAIL_PASSCODE
+    }
+  });
+router.get("/calendar/:id/mail", middleware.isLoggedIn,function(req, res){
+    Calendar.findById(req.params.id).populate("drive").populate("riders").exec(function(err, event){
+        var url1 = "https://www.google.com/maps/dir/?api=1&origin="+encodeURIComponent(event.drive.departure.location)
+  
+        url1 += "&waypoints="
+        event.riders.forEach(function(rider){
+          url1+= encodeURIComponent(rider.pickUpLocation)+"|"
+        })
+        url1 += "&destination="+ event.drive.destination.location
+        var mailOptions = {
+            from: 'carpooler48482@gmail.com',
+            to: req.user.email,
+            subject: 'Carpool To '+ event.drive.campus,
+            html:"<!DOCTYPE html><head><link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css'><style>.ui.button.black{color: #2185d0;margin-top: 10px;}h1{color:#2185d0}</style></head><body><div class='ui container'><h1><i class='code icon'></i>ridePool</h1><br><a href= '"+url1+"'class='ui button black' style='text-align: center;'>Begin Rout in Google Maps</a></div></body></html>"
+        }
+        transporter.sendMail(mailOptions, function(error, info){
+            if (error) {
+                console.log(error);
+                req.flash("error", "Error Sending Email")
+                res.redirect("back")
+            } else {
+                console.log('Email sent: ' + info.response);
+                req.flash("success", "Email Sent Successfully")
+                res.redirect("back")
+            }
+        });
+    })
+})
+
 module.exports = router

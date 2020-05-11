@@ -34,6 +34,13 @@
                   <div class="ui attached segment">
                     About: <span id = "duration"></span> minutes, <span id = "distance"></span>  kilometers
                   </div>
+                  <h5 class="ui attached header">
+                    Rout:
+                  </h5>
+                  <div class="ui attached segment">
+                        <a href="" class="black  ui button" id="mapURL"><i class="icon google"></i> View on Google Maps</a>
+                        <a href="/calendar/<%=event._id%>/mail" class="black  ui button" id="mapURL"><i class="icon mail"></i> Email Directions to your Phone</a>
+                  </div>
                   <h5 class="ui top attached header">
                     Riders:
                   </h5>
@@ -49,6 +56,7 @@
                       <%}%>
                         <a href="/calendar/<%=event._id%>/join" class="black  ui button">Join</a>
                   </div>
+
                   <%if(currentUser){%>
                     <% if (currentUser._id.equals(event.drive.driver.id)){%>
                       <h5 class="ui attached header">
@@ -68,15 +76,70 @@
                   <%}%>
 
             </div>
+
+            <%if(currentUser._id.equals(event.drive.driver.id)){%>
+              <div class="top ui attached header">
+                Calendar Help
+              </div>
+              <div class="ui attached header">
+                <a class="button ui black" href="" target="_blank"id="google"><i class="icon google"></i> Add to Google Calendar</a>
+              </div>
+            <%}else{%>
+              <%event.riders.forEach(function(rider){%>
+                <%if(rider.userId == currentUser._id) {%>
+                  <div class="top ui attached header">
+                    Calendar Help
+                  </div>
+                  <div class="ui attached header">
+                    <a class="button ui black" href="" target="_blank"id="google"><i class="icon google"></i> Add to Google Calendar</a>
+                  </div>
+                <%}%>
+              <%})%>
+              <%}%>
+
         </div>
+  
         <div class="six wide column">
             <div id="map"></div>
         </div>
     </div>
 </div>
 <script>
-  console.log(<%= event.drive.driveDistance%>)
-      function initMap() {
+  var drive = <%-JSON.stringify(event)%>
+
+  var url1 = "https://www.google.com/maps/dir/?api=1&origin=<%=encodeURIComponent(event.drive.departure.location)%>"
+  
+  url1 += "&waypoints="
+  drive.riders.forEach(function(rider){
+    url1+= encodeURIComponent(rider.pickUpLocation)+"|"
+  })
+  url1 += "&destination="+ drive.drive.destination.location
+  document.querySelector("#mapURL").href = url1
+
+  var date = <%-JSON.stringify(event.officialTime)%>
+  console.log(date)
+
+  var endDate = new Date(new Date(date).getTime() + <%=event.drive.driveDistance.duration / 60%>*60000).toISOString();
+  function con(date){
+    date = String(date)
+    date = date.substring(0, date.indexOf("."))
+
+    date = date.replace("-", '');
+    date = date.replace("-", '');
+    date = date.replace(":", '');
+    date = date.replace(":", '');
+    date += "Z"
+    return date
+  }
+  endDate = con(endDate)
+  date = con(date)
+  console.log("&dates="+date+"/"+endDate)
+  var url = "https://www.google.com/calendar/render?action=TEMPLATE&sf=true&output=xml&text=Carpool+to+<%=event.drive.campus%>&location=&details=&dates=20200513T193000Z/20200513T194500Z"
+
+  document.querySelector("#google").href = url
+  console.log(url)
+  console.log(rider)
+    function initMap() {
         var directionsService = new google.maps.DirectionsService;
         var directionsDisplay = new google.maps.DirectionsRenderer;
         var map = new google.maps.Map(document.getElementById('map'), {

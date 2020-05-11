@@ -88,4 +88,34 @@ router.get("/logout", function(req, res){
 
     res.redirect("/home")
 })
+router.get("/user/:id/:note_id", middleware.isLoggedIn, function(req, res){
+    User.findById(req.params.id, function(err, user){
+        if(err){
+            console.log(err)
+            req.flash("error", "Error Clearing Notification")
+            res.redirect("back")
+        }else{
+            
+            user.notifications.forEach(function(note){
+                console.log(note._id == req.params.note_id)
+                console.log(note._id)
+                console.log(req.params.id)
+                if(note._id == req.params.note_id){
+                    user.notifications.splice(user.notifications.indexOf(note), 1)
+                    if(note.title.indexOf("Declined") == -1){
+                        res.redirect("/calendar/"+note.event)
+
+                    }else{
+                        res.redirect("back")
+                    }
+                    user.save()
+
+                }else{
+                    console.log("nothing")
+                }
+            })
+            
+        }
+    })
+})
 module.exports = router

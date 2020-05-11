@@ -10,34 +10,36 @@
     <title>ridePool</title>
 </head>
 <body>
-    <!-- <div class="ui fixed  borderless borderless menu">
-        <div class="ui container">
 
-            <a href="/home" ><div class="header blue item"><i class="code icon"></i>ridePool</div></a>
-
-            <%if(!currentUser){%>
-                <a href="/register" class="item blue right">Sign Up</a>
-                <a href="/login" class="item ">Log In</a>
-            <%}else{%>
-                <a href="/calendar/new" class=" blue item">New Drive</a>
-                <a href="/logout" class="item blue right">Logout</a>
-                <a href="/user/<%=currentUser._id%>" class="blue item ">Signed in as <%=currentUser.username%></a>
-            <%}%>
-
-            
-        </div>
-    </div> -->
     <div class="ui grid">
 	
         <div class="computer tablet only row">
             <div class="column">
                 <div class="ui borderless menu">
+                    
                     <a href="/home" ><div class="header blue item"><i class="code icon"></i>ridePool</div></a>
                     <%if(!currentUser){%>
                         <a href="/register" class="item blue right">Sign Up</a>
                         <a href="/login" class="item ">Log In</a>
                     <%}else{%>
                         <a href="/calendar/new" class=" blue item">New Drive</a>
+                        <div class="blue item">
+                            <div class= "bells bellows" >
+                                <i class="bell outline icon"></i>
+                                <% if (currentUser.notifications.length > 0){%>
+                                    <i class="circle icon"></i>
+                                <%}%>
+                            </div>
+                            <div class="ui custom popup top left transition hidden">
+                                <% if(!currentUser.notifications){%>
+                                    <p>No notifications so far</p>
+                                <%}%>
+                                <% currentUser.notifications.forEach(function(note){%>
+                                    <p><strong><%=note.title%></strong></p>
+                                    <p><a href="/calendar/<%=note.event%>"><%=note.text%></a> <a href="/user/<%=currentUser._id%>/<%=note._id%>"><i class="close icon"></i></a></p> 
+                                <%})%>                    
+                            </div>
+                        </div>
                         <a href="/logout" class="item blue right">Logout</a>
                         <a href="/user/<%=currentUser._id%>" class="blue item ">Signed in as <%=currentUser.username%></a>
                     <%}%>
@@ -48,7 +50,13 @@
          <div class="mobile only row">
             <div class="column">
                 <div class="ui borderless menu">
-                    <a id="mobile_item" class="item"><i class="bars icon"></i></a>
+                    <a id="mobile_item" class="item"><i class="bars icon"></i>   
+                        <%if(currentUser){%>
+                            <% if (currentUser.notifications.length > 0){%>
+                                <i class="circle icon low"></i>
+                            <%}%>
+                        <%}%>
+                    </a>
 
                     <a href="/home" ><div class="header blue item"><i class="code icon"></i>ridePool</div></a>
                     
@@ -65,7 +73,27 @@
                 <a href="/register" class="item blue right">Sign Up</a>
                 <a href="/login" class="item ">Log In</a>
             <%}else{%>
+                <div class="blue item">
+                    <div class= "bells bellows" >
+                        <i class="bell outline icon"></i>
+                        <% if (currentUser.notifications.length > 0){%>
+                            <i class="circle icon"></i>
+                        <%}%>
+                    </div>
+                    <div class="ui custom popup top left transition hidden">
+                        <% if(currentUser.notifications == []){%>
+                            <p>No notifications so far</p>
+                        <%}%>
+                        <% currentUser.notifications.forEach(function(note){%>
+                            <p><strong><%=note.title%></strong></p>
+                            <p><a href="/calendar/<%=note.event%>"><%=note.text%></a> <a href="/user/<%=currentUser._id%>/<%=note._id%>"><i class="close icon"></i></a></p> 
+                        <%})%>                    
+                    </div>
+                </div>
+
+
                 <a href="/calendar/new" class=" blue item">New Drive</a>
+
                 <a href="/logout" class="item blue right">Logout</a>
                 <a href="/user/<%=currentUser._id%>" class="blue item ">Signed in as <%=currentUser.username%></a>
             <%}%>
@@ -75,20 +103,16 @@
 <div class="ui container">
 
     <%if(errorMessage.length > 0 ){%>
+
         <br>
-        <br>
-        <br>
-        <br>
-        <div style= "margin-bottom: -70px"class="ui red message">
+        <div style= "margin-bottom: 0"class="ui red message">
             <p><%=errorMessage%></p>
         </div>
     <%}%>
     <%if(successMessage.length > 0 ){%>
+
         <br>
-        <br>
-        <br>
-        <br>
-        <div style= "margin-bottom: -70px" class="ui blue message">
+        <div style= "margin-bottom: 0" class="ui blue message">
             <p><%=successMessage%></p>
         </div>
     
@@ -100,4 +124,20 @@ $('.ui.sidebar').sidebar({
     context: $('.ui.pushable.segment'),
     transition: 'overlay'
 }).sidebar('attach events', '#mobile_item');
+</script>
+<script>
+    $('.bells')
+      .popup({
+        popup : $('.custom.popup'),
+        position   : 'bottom left',
+        hoverable  : true,
+
+        on: 'click',
+        delay: {
+            show: 300,
+            hide: 800
+        }
+      })
+    ;
+
 </script>

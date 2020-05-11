@@ -14,7 +14,7 @@
                     </div>
                     <div class="eleven wide column">
                         <div class ="">
-                            <h5 class="month-title"></h5>
+                            <h4 class="month-title"></h4>
                             <div class="ui icon buttons">
                                 <button id="back" onclick = "back()" style = "margin-bottom:10px;padding-bottom: 2px"class="ui black xs button">
                                     <i class="chevron left icon"></i>
@@ -79,7 +79,15 @@
         var events = <%-JSON.stringify(calendar)%>;
 
         var day = getMonday(new Date(year1, month1, day1))
-        var firstDay = day.getDate()
+        var firstDay;
+
+        if(new Date().getDay() == 0 || new Date().getDay() == 6){
+            firstDay = day.getDate() + 7
+        }else{
+            firstDay = day.getDate()
+        }
+        console.log(day.getDay())
+        console.log(firstDay)
         var mon = day.getMonth() +1
         var mont = day.getMonth()
         var year = day.getUTCFullYear()

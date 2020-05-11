@@ -1,14 +1,60 @@
-i.icon {
+i.code.icon {
     font-size: 2em;;
 }
+i.bars.icon {
+    font-size: 2em;;
+}
+i.apple.icon{
+    font-size: 1.5em;
+}
+i.google.icon{
+    font-size: 1.5em;
+}
+i.mail.icon{
+    font-size: 1.5em;
+}
+i.chevron.icon {
+    font-size: 2em;;
+}
+i.icon.bell{
+    font-size: 2em;
+}
 div.container.main{
-    margin-top: 6.0em;
+    margin-top: 3.0em;
 }
 div.ui.fixed.menu{
     border-bottom: 1px solid #2185d0;
 }
 .ui.menu .item{
     color: #2185d0
+}
+.icon.circle{
+    font-size: 0.1em;
+    vertical-align: middle;
+    line-height: normal;
+    display: inline-block;
+    padding-bottom: 17px;
+
+
+}
+.icon.circle.low{
+    padding-bottom: 6px;
+}
+.icon.close{
+    font-size: 1em;
+}
+.icon.close:hover{
+    color: black;
+}
+.bells{
+    vertical-align: middle;
+
+}
+div.ui.custom.popup{
+    top: auto; left: 1px; bottom: 69px; right: auto; width: 230px;
+    z-index: 5;
+    max-height: 400px;
+    overflow-y: scroll;
 }
 .ui.menu a.item:hover{
     color: #2185d0
@@ -100,6 +146,7 @@ div.pushable.segment{
     color: #2185d0;
     margin-top: 10px;
 }
+
 .cal-col.first{
     border-radius: 5px 0  0 5px;
 }

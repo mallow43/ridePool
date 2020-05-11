@@ -4,7 +4,8 @@ var riders = new mongoose.Schema({
     lastName: String,
     pickUpLocation: String,
     distance: String, 
-    duration: String
+    duration: String,
+    userId: String
 
 })
 module.exports = mongoose.model("pendingRider", riders)
