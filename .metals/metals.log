@@ -1,0 +1,12 @@
+2021.01.17 13:17:52 INFO  Started: Metals version 0.9.8 in workspace '/Users/mats2/Documents/GitHub/ridePool' for client vscode.
+2021.01.17 13:18:03 INFO  time: initialize in 10s
+2021.01.17 13:18:06 WARN  Build server is not auto-connectable.
+2021.01.17 13:18:06 WARN  no build tool detected in workspace '/Users/mats2/Documents/GitHub/ridePool'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. 
+Jan 17, 2021 1:19:16 PM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+2021.01.18 03:31:26 INFO  shutting down Metals
+2021.01.18 11:26:07 INFO  Started: Metals version 0.9.8 in workspace '/Users/mats2/Documents/GitHub/ridePool' for client vscode.
+2021.01.18 11:26:32 INFO  time: initialize in 24s
+2021.01.18 11:26:35 WARN  Build server is not auto-connectable.
+2021.01.18 11:26:35 WARN  no build tool detected in workspace '/Users/mats2/Documents/GitHub/ridePool'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. 
+2021.01.19 08:51:29 INFO  shutting down Metals

@@ -1,114 +1,110 @@
 <%- include("partials/header")%>
 <div class="ui grid stackable container main">
-    <div class="ui row">
-
-        <div class="ten wide column">
-            <div class="ui main text  segment">
-                <div class="ui huge header">Carpool to <%= event.drive.campus%> <%=event.startTime%></div>
-                
-            </div>
-            <div class="ui segment">
-                <h5 class="ui top attached header">
-                    Driver: 
-                  </h5>
-                  <a class = "driver"href="/user/<%=event.drive.driver.id%>">
-                  <div class="ui attached segment">
-                    <%=event.drive.driver.firstName%> <%=event.drive.driver.lastName%>
-                  </div>
-                </a>
-                  <h5 class="ui attached header">
-                    Destination:
-                  </h5>
-                  <div class="ui attached segment">
-                    <% if(event.drive.campus == "Bissonet Campus" || event.drive.campus == "Museum District Campus"){%>
-                        <%= event.drive.campus%> 
-
-                    <%}else{%>
-                        Outside Of School Event: <%= event.drive.destination.location%>
-
-                    <%}%>
-                  </div>
-                  <h5 class="ui attached header">
-                    Drive Time: 
-                  </h5>
-                  <div class="ui attached segment">
-                    About: <span id = "duration"></span> minutes, <span id = "distance"></span>  kilometers
-                  </div>
-                  <h5 class="ui attached header">
-                    Rout:
-                  </h5>
-                  <div class="ui attached segment">
-                        <a href="" class="black  ui button" id="mapURL"><i class="icon google"></i> View on Google Maps</a>
-                        <a href="/calendar/<%=event._id%>/mail" class="black  ui button" id="mapURL"><i class="icon mail"></i> Email Directions to your Phone</a>
-                  </div>
-                  <h5 class="ui top attached header">
-                    Riders:
-                  </h5>
-                  <div class="ui attached segment">
-                      <%if(event.riders.length == 0){%>
-                          <p>No Riders So Far</p>
-                      <%}else{%>
-                        <p>
-                        <% event.riders.forEach(function(rider){%>
-                            <%=rider.firstName%> <%=rider.lastName%>,
-                        <%})%>
-                        </p>
-                      <%}%>
-                        <a href="/calendar/<%=event._id%>/join" class="black  ui button">Join</a>
-                  </div>
-
-                  <%if(currentUser){%>
-                    <% if (currentUser._id.equals(event.drive.driver.id)){%>
-                      <h5 class="ui attached header">
-                        Pending Riders: 
-                      </h5>
-                      <% event.pendingRiders.forEach(function(rider){%>
-                      <div class="ui attached segment">
-                        
-                          <p>Name: <%= rider.firstName%> <%= rider.lastName%></p>
-                          <p>+ <%=rider.duration%> minutes, + <%= rider.distance%> km, <%=rider.pickUpLocation.substr(0, rider.pickUpLocation.indexOf(","))%></p>
-                          <a href="/calendar/<%=event._id%>/<%=rider.id%>/accept" class="button ui black ">Accept</a>
-                          <a href="/calendar/<%=event._id%>/<%=rider.id%>/decline" class="button ui black redoo">Decline</a>
-                      </div>
-                      <%})%>
-                    <%}%>
-
-                  <%}%>
-
-            </div>
-
-            <%if(currentUser._id.equals(event.drive.driver.id)){%>
-              <div class="top ui attached header">
-                Calendar Help
-              </div>
-              <div class="ui attached header">
-                <a class="button ui black" href="" target="_blank"id="google"><i class="icon google"></i> Add to Google Calendar</a>
-              </div>
-            <%}else{%>
-              <%event.riders.forEach(function(rider){%>
-                <%if(rider.userId == currentUser._id) {%>
-                  <div class="top ui attached header">
-                    Calendar Help
-                  </div>
-                  <div class="ui attached header">
-                    <a class="button ui black" href="" target="_blank"id="google"><i class="icon google"></i> Add to Google Calendar</a>
-                  </div>
-                <%}%>
-              <%})%>
-              <%}%>
-
+  <div class="ui row">
+    <div class="ten wide column">
+      <div class="ui main text segment">
+        <div class="ui huge header">
+          Carpool to <%= event.drive.campus%> <%=event.startTime%>
         </div>
-  
-        <div class="six wide column">
-            <div id="map"></div>
+      </div>
+      <div class="ui segment">
+        <h5 class="ui top attached header">Driver:</h5>
+        <a class="driver" href="/user/<%=event.drive.driver.id%>">
+          <div class="ui attached segment">
+            <%=event.drive.driver.firstName%> <%=event.drive.driver.lastName%>
+          </div>
+        </a>
+        <h5 class="ui attached header">Destination:</h5>
+        <div class="ui attached segment">
+          <% if(event.drive.campus == "Bissonet Campus" || event.drive.campus ==
+          "Museum District Campus"){%> <%= event.drive.campus%> <%}else{%> <%=
+          event.drive.destination.location%> <%}%>
         </div>
+        <h5 class="ui attached header">Drive Time:</h5>
+        <div class="ui attached segment">
+          About: <span id="duration"></span> minutes,
+          <span id="distance"></span> kilometers
+        </div>
+        <h5 class="ui attached header">Rout:</h5>
+        <div class="ui attached segment">
+          <a href="" class="black ui button" id="mapURL"
+            ><i class="icon google"></i> View on Google Maps</a
+          >
+          <a
+            href="/calendar/<%=event._id%>/mail"
+            class="black ui button"
+            id="mapURL"
+            ><i class="icon mail"></i> Email Directions to your Phone</a
+          >
+        </div>
+        <h5 class="ui top attached header">Riders:</h5>
+        <div class="ui attached segment">
+          <%if(event.riders.length == 0){%>
+          <p>No Riders So Far</p>
+          <%}else{%>
+          <p>
+            <% event.riders.forEach(function(rider){%> <%=rider.firstName%>
+            <%=rider.lastName%>, <%})%>
+          </p>
+          <%}%>
+          <a href="/calendar/<%=event._id%>/join" class="black ui button"
+            >Join</a
+          >
+        </div>
+
+        <%if(currentUser){%> <% if
+        (currentUser._id.equals(event.drive.driver.id)){%>
+        <h5 class="ui attached header">Pending Riders:</h5>
+        <% event.pendingRiders.forEach(function(rider){%>
+        <div class="ui attached segment">
+          <p>Name: <%= rider.firstName%> <%= rider.lastName%></p>
+          <p>
+            + <%=rider.duration%> minutes, + <%= rider.distance%> km,
+            <%=rider.pickUpLocation.substr(0,
+            rider.pickUpLocation.indexOf(","))%>
+          </p>
+          <a
+            href="/calendar/<%=event._id%>/<%=rider.id%>/accept"
+            class="button ui black"
+            >Accept</a
+          >
+          <a
+            href="/calendar/<%=event._id%>/<%=rider.id%>/decline"
+            class="button ui black redoo"
+            >Decline</a
+          >
+        </div>
+        <%})%> <%}%> <%}%>
+      </div>
+
+      <%if(currentUser._id.equals(event.drive.driver.id)){%>
+      <div class="top ui attached header">Calendar Help</div>
+      <div class="ui attached header">
+        <a class="button ui black" href="" target="_blank" id="google"
+          ><i class="icon google"></i> Add to Google Calendar</a
+        >
+      </div>
+      <%}else{%> <%event.riders.forEach(function(rider){%> <%if(rider.userId ==
+      currentUser._id) {%>
+      <div class="top ui attached header">Calendar Help</div>
+      <div class="ui attached header">
+        <a class="button ui black" href="" target="_blank" id="google"
+          ><i class="icon google"></i> Add to Google Calendar</a
+        >
+      </div>
+      <%}%> <%})%> <%}%>
     </div>
+
+    <div class="six wide column">
+      <div id="map"></div>
+    </div>
+  </div>
 </div>
 <script>
   var drive = <%-JSON.stringify(event)%>
 
   var url1 = "https://www.google.com/maps/dir/?api=1&origin=<%=encodeURIComponent(event.drive.departure.location)%>"
-  
+
   url1 += "&waypoints="
   drive.riders.forEach(function(rider){
     url1+= encodeURIComponent(rider.pickUpLocation)+"|"
@@ -175,7 +171,7 @@
             waypoints: waypoints
         }, function(response, status) {
           if (status === 'OK') {
-            
+
             directionsDisplay.setDirections(response);
             var directionsData = response.routes[0].legs[0]; // Get data about the mapped route
             if (!directionsData) {
@@ -203,7 +199,11 @@
       document.getElementById("duration").innerHTML = Math.round(duration)
       var distance = <%=event.drive.driveDistance.distance * 0.9144 *0.001%>
       document.getElementById("distance").innerHTML = Math.round(distance)
-    </script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAz2hqfmP9Xns6N6Khgl2j3tD83fQnep1c&callback=initMap"></script>
+</script>
+<script
+  async
+  defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAz2hqfmP9Xns6N6Khgl2j3tD83fQnep1c&callback=initMap"
+></script>
 
 <%- include("partials/footer")%>
